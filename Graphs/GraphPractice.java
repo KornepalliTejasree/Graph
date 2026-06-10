@@ -136,3 +136,228 @@ public class GraphPractice {
         }
     }
 }
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        ArrayList<ArrayList<Integer>> graph=new ArrayList<>();
+        int n=isConnected.length;
+        for(int i=0;i<n;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(i==j)continue;
+                else if(isConnected[i][j]==1)graph.get(i).add(j);
+            }
+        }
+        int count=0;
+        boolean vis[]=new boolean[n];
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                count++;
+                BFS(graph,vis,i);
+            }
+        }
+        return count;
+    }
+    public static void BFS(ArrayList<ArrayList<Integer>> graph,boolean vis[],int curr){
+        Queue<Integer> q=new LinkedList<>();
+        q.add(curr);
+        while(!q.isEmpty()){
+            int value=q.remove();
+            if(vis[value])continue;
+            vis[value]=true;
+            for(int i=0;i<graph.get(value).size();i++){
+                int num=graph.get(value).get(i);
+                if(!vis[num]){
+                    BFS(graph,vis,num);
+                }
+            }
+        }
+    }
+}
+class Solutionn {
+    static int count=0;
+    public int orangesRotting(int[][] grid) {
+        int m=grid.length;
+        int n=grid[0].length;
+        boolean vis[][]=new boolean[m][n];
+         count=0;
+          Queue<Pair> q=new LinkedList<>();
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j]==2){
+                    vis[i][j]=true;
+                   q.add(new Pair(i,j));
+                }
+            }
+        }
+        bfs(grid,vis,q);
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j]==1){
+                    return -1;
+                }
+            }
+        }
+        return count;
+    }
+    class Pair{
+        int i;
+        int j;
+        Pair(int i,int j){
+            this.i=i;
+            this.j=j;
+        }
+    }
+    public void bfs(int grid[][],boolean vis[][],Queue<Pair> q){
+        while(!q.isEmpty()){
+            int size=q.size();  
+            for(int k=0;k<size;k++){
+                Pair curr=q.remove();
+                check(curr.i,curr.j,q,vis,grid);
+            }
+            if(!q.isEmpty()) count++;
+        }
+         
+    }
+    public void check(int sr,int sc,Queue<Pair> q,boolean vis[][],int[][] image){
+
+    int m=image.length;
+    int n=image[0].length;
+
+    if(sr-1>=0 && !vis[sr-1][sc] && image[sr-1][sc]==1){
+        vis[sr-1][sc]=true;
+        image[sr-1][sc]=2;
+        q.add(new Pair(sr-1,sc));
+    }
+
+    if(sr+1<m && !vis[sr+1][sc] && image[sr+1][sc]==1){
+        vis[sr+1][sc]=true;
+        image[sr+1][sc]=2;
+        q.add(new Pair(sr+1,sc));
+    }
+
+    if(sc+1<n && !vis[sr][sc+1] && image[sr][sc+1]==1){
+        vis[sr][sc+1]=true;
+        image[sr][sc+1]=2;
+        q.add(new Pair(sr,sc+1));
+    }
+
+    if(sc-1>=0 && !vis[sr][sc-1] && image[sr][sc-1]==1){
+        vis[sr][sc-1]=true;
+        image[sr][sc-1]=2;
+        q.add(new Pair(sr,sc-1));
+    }
+}
+}
+class Solution1 {
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        int originalColor=image[sr][sc];
+        Queue<Pair> q=new LinkedList<>();
+        q.add(new Pair(sr,sc));
+        boolean vis[][]=new boolean[image.length][image[0].length];
+        vis[sr][sc]=true;
+        image[sr][sc]=color;
+        bfs(image,q,vis,originalColor,color);
+        return image;
+    }
+    class Pair{
+      int i;
+      int j;
+      Pair(int i,int j){
+        this.i=i;
+        this.j=j;
+      }
+    }
+    public void bfs(int[][] image,Queue<Pair> q,boolean vis[][],int ogColor,int color){
+        while(!q.isEmpty()){
+            Pair curr=q.poll();
+            check(curr.i,curr.j,image,q,vis,ogColor,color);
+        }
+    }
+    public void check(int i,int j,int[][] grid,Queue<Pair> q,boolean vis[][],int ogColor,int color){
+        int m=grid.length;
+        int n=grid[0].length;
+        if(i-1>=0 && grid[i-1][j]==ogColor && !vis[i-1][j]){
+        q.add(new Pair(i-1, j));
+        vis[i-1][j]=true;
+        grid[i-1][j]=color;
+       }
+       if(i+1<m && grid[i+1][j]==ogColor && !vis[i+1][j]){
+        q.add(new Pair(i+1, j));
+        vis[i+1][j]=true;
+        grid[i+1][j]=color;
+       }
+       if(j-1>=0 && grid[i][j-1]==ogColor && !vis[i][j-1]){
+        q.add(new Pair(i, j-1));
+        vis[i][j-1]=true;
+        grid[i][j-1]=color;
+       }
+       if(j+1<n && grid[i][j+1]==ogColor && !vis[i][j+1]){
+        q.add(new Pair(i, j+1));
+        vis[i][j+1]=true;
+        grid[i][j+1]=color;
+       }
+    }
+    }
+class Solutiion {
+    public boolean isCycle(int V, List<Integer>[] adj) {
+        return cycle(adj,new boolean[V],0,-1);
+    }
+    public boolean cycle(List<Integer>[] adj,boolean vis[],int curr,int parent){
+        vis[curr]=true;
+        for(int i=0;i<adj[curr].size();i++){
+            int dest=adj[curr].get(i);
+            if(vis[dest] && parent!=dest){
+                return true;
+            }
+            if(!vis[dest]){
+                if(cycle(adj,vis,dest,curr)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+class Soolution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph=new ArrayList<>();
+        for(int i=0;i<numCourses;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] arr:prerequisites){
+            int i=arr[1];
+            int j=arr[0];
+            graph.get(i).add(j);
+        }
+    boolean vis[] = new boolean[numCourses];
+    boolean stack[] = new boolean[numCourses];
+
+        for(int i = 0; i < numCourses; i++){
+            if(!vis[i]){
+                if(cycleDirected(graph, vis, i, stack)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean cycleDirected(ArrayList<ArrayList<Integer>> graph,boolean vis[],int curr,boolean stack[]){
+       vis[curr]=true;
+       stack[curr]=true;
+       for(int i=0;i<graph.get(curr).size();i++){
+        int dest=graph.get(curr).get(i);
+        if(!vis[dest]){
+            if(cycleDirected(graph,vis,dest,stack)){
+                return true;
+            }
+        }
+        if(stack[dest]){
+            return true;
+        }
+       }
+       stack[curr]=false;
+       return false;
+    }
+}
