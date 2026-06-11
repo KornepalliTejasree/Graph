@@ -361,3 +361,387 @@ class Soolution {
        return false;
     }
 }
+class SSolution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m=mat.length;
+        int n=mat[0].length;
+        boolean[][] vis=new boolean[m][n];
+        int[][] dis=new int[m][n];
+      Queue<Pair> q=new LinkedList<>();
+      for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(mat[i][j]==0){
+                q.add(new Pair(i,j,0));
+            }
+        }
+     }
+     traverse(q,dis,mat,vis);
+     return dis;
+    }
+   static class Pair{
+        int i;
+        int j;
+        int time;
+        Pair(int i,int j,int time){
+            this.i=i;
+            this.j=j;
+            this.time=time;
+        }
+    }
+    public static void traverse(Queue<Pair> q,int[][] dis,int[][] mat,boolean vis[][]){
+        while(!q.isEmpty()){
+            Pair p=q.poll();
+            int i=p.i;
+            int j=p.j;
+            int time=p.time;
+            dis[i][j]=time;
+            vis[i][j]=true;
+            check(p,mat,vis,q);
+        }
+    }
+    public static void check(Pair p,int[][] mat,boolean vis[][], Queue<Pair> q){
+        int i=p.i;
+        int j=p.j;
+        int time=p.time;
+        int m=mat.length;
+        int n=mat[0].length;
+        if(i-1>=0 && !vis[i-1][j] && mat[i-1][j]==1){
+            vis[i-1][j]=true;
+            q.add(new Pair(i-1,j,time+1));
+        }
+        if(i+1<m && !vis[i+1][j] && mat[i+1][j]==1){
+            vis[i+1][j]=true;
+            q.add(new Pair(i+1,j,time+1));
+        }
+        if(j-1>=0 && !vis[i][j-1] && mat[i][j-1]==1){
+            vis[i][j-1]=true;
+            q.add(new Pair(i,j-1,time+1));
+        }
+        if(j+1<n && !vis[i][j+1] && mat[i][j+1]==1){
+            vis[i][j+1]=true;
+            q.add(new Pair(i,j+1,time+1));
+        }
+    }
+}
+class Sooolution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph=new ArrayList<>();
+        for(int i=0;i<numCourses;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] arr:prerequisites){
+            int i=arr[1];
+            int j=arr[0];
+            graph.get(i).add(j);
+        }
+     Stack<Integer> st=new Stack<>();
+     boolean vis[]=new boolean[numCourses];
+     boolean isCycle=true;
+    boolean stack[] = new boolean[numCourses];
+        for(int i = 0; i < numCourses; i++){
+            if(!vis[i]){
+                if(cycleDirected(graph, vis, i, stack)){
+                    isCycle=false;
+                }
+            }
+        }
+        vis=new boolean[numCourses];
+     for(int i=0;i<numCourses;i++){
+        if(!vis[i]){
+            topologicalSort(graph,st,vis,i);
+        }
+     }
+     int res[]=new int[numCourses];
+     int i=0;
+     while(!st.isEmpty()){
+        res[i++]=st.pop();
+     }
+     if(isCycle){
+     return res;
+     }
+     else{
+        return new int[0];
+     }
+    }
+    public void topologicalSort(ArrayList<ArrayList<Integer>> graph,Stack<Integer> st,boolean vis[],int curr){
+        vis[curr]=true;
+        for(int i=0;i<graph.get(curr).size();i++){
+            int dest=graph.get(curr).get(i);
+            if(!vis[dest]){
+                topologicalSort(graph,st,vis,dest);
+            }
+        }
+        st.push(curr);
+    }
+    public boolean cycleDirected(ArrayList<ArrayList<Integer>> graph,boolean vis[],int curr,boolean stack[]){
+       vis[curr]=true;
+       stack[curr]=true;
+       for(int i=0;i<graph.get(curr).size();i++){
+        int dest=graph.get(curr).get(i);
+        if(!vis[dest]){
+            if(cycleDirected(graph,vis,dest,stack)){
+                return true;
+            }
+        }
+        if(stack[dest]){
+            return true;
+        }
+       }
+       stack[curr]=false;
+       return false;
+    }
+}
+class Solutiiion {
+    public void solve(char[][] board) {
+        int m=board.length;
+        int n=board[0].length;
+        boolean vis[][]=new boolean[m][n];
+        Queue<Pair> q=new LinkedList<>();
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!vis[i][j] && board[i][j]=='O' && (i==0 || j==0 || i==m-1 || j==n-1)){
+                    q.add(new Pair(i,j));
+                    vis[i][j]=true;
+                    bfs(board,q,vis);
+                }
+            }
+        }
+         for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!vis[i][j] && board[i][j]=='O'){
+                    board[i][j]='X';
+                }
+            }
+         }
+    }
+    class Pair{
+        int i;
+        int j;
+        Pair(int i,int j){
+            this.i=i;
+            this.j=j;
+        }
+    }
+    public void bfs(char[][] board,Queue<Pair> q,boolean[][] vis){
+        while(!q.isEmpty()){
+            Pair p=q.poll();
+           check(p,q,board,vis);
+        }
+    }
+    public void check(Pair p,Queue<Pair> q,char[][] board,boolean[][] vis){
+        int i=p.i;
+        int j=p.j;
+        int m=board.length;
+        int n=board[0].length;
+        if(i-1>=0  && board[i-1][j]=='O' && !vis[i-1][j]){
+            vis[i-1][j]=true;
+            q.add(new Pair(i-1,j));
+        }
+        if(j-1>=0  && board[i][j-1]=='O' && !vis[i][j-1]){
+            vis[i][j-1]=true;
+            q.add(new Pair(i,j-1));
+        }
+        if(i+1<m && board[i+1][j]=='O' && !vis[i+1][j]){
+            vis[i+1][j]=true;
+            q.add(new Pair(i+1,j));
+        }
+        if(j+1<n && board[i][j+1]=='O' && !vis[i][j+1]){
+            vis[i][j+1]=true;
+            q.add(new Pair(i,j+1));
+        }
+    }
+}
+// class Solution {
+//     public int numEnclaves(int[][] grid) {
+//         int m=grid.length;
+//         int n=grid[0].length;
+//         int j=0;
+//         int i=0;
+//         int count=0;
+//         boolean vis[][]=new boolean[m][n];
+//         //same column and row changes
+//         for( i=0;i<m;i++){
+//             if(grid[i][j]==1 && !vis[i][j]){
+//                 bfs(grid,i,j,vis);
+//             }
+//         }
+//         //same row and column changes
+//         i=0;
+//         for(j=0;j<n;j++){
+//              if(grid[i][j]==1 && !vis[i][j]){
+//                 bfs(grid,i,j,vis);
+//             }
+//         }
+//         //last row and column changes
+//         i=m-1;
+//          for(j=0;j<n;j++){
+//              if(grid[i][j]==1 && !vis[i][j]){
+//                 bfs(grid,i,j,vis);
+//             }
+//         }
+//         //last column and row changes
+//         j=n-1;
+//         for( i=0;i<m;i++){
+//             if(grid[i][j]==1 && !vis[i][j]){
+//                 bfs(grid,i,j,vis);
+//             }
+//         }
+        
+//         for(i=0;i<m;i++){
+//             for(j=0;j<n;j++){
+//                 if(!vis[i][j] && grid[i][j]==1){
+//                     count++;
+//                 }
+//             }
+//         }
+//         return count;
+//     }
+//     class Pair{
+//         int i;
+//         int j;
+//         Pair(int i,int j){
+//             this.i=i;
+//             this.j=j;
+//         }
+//     }
+//     public void bfs(int board[][],int i,int j,boolean vis[][]){
+//         Queue<Pair> q=new LinkedList<>();
+//         q.add(new Pair(i,j));
+//         while(!q.isEmpty()){
+//             Pair curr=q.remove();
+//             if(vis[curr.i][curr.j])continue;
+//             vis[curr.i][curr.j]=true;
+//             check(curr.i,curr.j,board,vis,q);
+//         }
+//     }
+//     public void check(int i,int j,int[][] board,boolean vis[][],Queue<Pair> q){
+//         int m=board.length;
+//         int n=board[0].length;
+//         int[][] directions={{1,0},{0,1},{0,-1},{-1,0}};
+//         for(int[] direction:directions){
+//             int a=i+direction[0];
+//             int b=j+direction[1];
+//             if( a>=0 && b>=0 && a<m && b<n && !vis[a][b] && board[a][b]==1 ){
+//                 q.add(new Pair(a,b));
+//             }
+//         }
+//     }
+//     }
+    class Solutionnn {
+    public int numEnclaves(int[][] grid) {
+        int m=grid.length;
+        int n=grid[0].length;
+        boolean vis[][]=new boolean[m][n];
+        Queue<Pair> q=new LinkedList<>();
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!vis[i][j] && grid[i][j]==1 && (i==0 || j==0 || i==m-1 || j==n-1)){
+                    q.add(new Pair(i,j));
+                    vis[i][j]=true;
+                    bfs(grid,q,vis);
+                }
+            }
+        }
+        int count=0;
+         for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!vis[i][j] && grid[i][j]==1){
+                    count++;
+                }
+            }
+         }
+         return count;
+    }
+    class Pair{
+        int i;
+        int j;
+        Pair(int i,int j){
+            this.i=i;
+            this.j=j;
+        }
+    }
+    public void bfs(int[][] board,Queue<Pair> q,boolean[][] vis){
+        while(!q.isEmpty()){
+            Pair p=q.poll();
+           check(p,q,board,vis);
+        }
+    }
+    public void check(Pair p,Queue<Pair> q,int[][] board,boolean[][] vis){
+        int i=p.i;
+        int j=p.j;
+        int m=board.length;
+        int n=board[0].length;
+        if(i-1>=0  && board[i-1][j]==1 && !vis[i-1][j]){
+            vis[i-1][j]=true;
+            q.add(new Pair(i-1,j));
+        }
+        if(j-1>=0  && board[i][j-1]==1 && !vis[i][j-1]){
+            vis[i][j-1]=true;
+            q.add(new Pair(i,j-1));
+        }
+        if(i+1<m && board[i+1][j]==1 && !vis[i+1][j]){
+            vis[i+1][j]=true;
+            q.add(new Pair(i+1,j));
+        }
+        if(j+1<n && board[i][j+1]==1 && !vis[i][j+1]){
+            vis[i][j+1]=true;
+            q.add(new Pair(i,j+1));
+        }
+    }
+}
+class Solllution {
+    public int numIslands(char[][] grid) {
+        int m=grid.length;
+        int n=grid[0].length;
+        int count=0;
+        Queue<Pair> q=new LinkedList<>();
+        boolean vis[][]=new boolean[m][n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(!vis[i][j] && grid[i][j]=='1'){
+                    count++;
+                    q.add(new Pair(i,j));
+                    vis[i][j]=true;
+                    bfs(q,vis,grid);
+                }
+            }
+        }
+        return count;
+    }
+    public class Pair{
+        int i;
+        int j;
+        Pair(int i,int j){
+            this.i=i;
+            this.j=j;
+        }
+    }
+    public void bfs(Queue<Pair> q,boolean vis[][],char[][] grid){
+        while(!q.isEmpty()){
+            Pair p=q.poll();
+            check(p,q,vis,grid);
+        }
+    }
+     public void check(Pair p,Queue<Pair> q,boolean[][] vis,char[][] board){
+        int i=p.i;
+        int j=p.j;
+        int m=board.length;
+        int n=board[0].length;
+        if(i-1>=0  && board[i-1][j]=='1' && !vis[i-1][j]){
+            vis[i-1][j]=true;
+            q.add(new Pair(i-1,j));
+        }
+        if(j-1>=0  && board[i][j-1]=='1' && !vis[i][j-1]){
+            vis[i][j-1]=true;
+            q.add(new Pair(i,j-1));
+        }
+        if(i+1<m && board[i+1][j]=='1' && !vis[i+1][j]){
+            vis[i+1][j]=true;
+            q.add(new Pair(i+1,j));
+        }
+        if(j+1<n && board[i][j+1]=='1' && !vis[i][j+1]){
+            vis[i][j+1]=true;
+            q.add(new Pair(i,j+1));
+        }
+    }
+}
