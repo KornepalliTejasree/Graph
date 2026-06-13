@@ -745,3 +745,134 @@ class Solllution {
         }
     }
 }
+class Soluuuution {
+    public boolean isBipartite(int[][] graph) {
+        ArrayList<ArrayList<Integer>> graphh=new ArrayList<>();
+        for(int i=0;i<graph.length;i++){
+            graphh.add(new ArrayList<>());
+        }
+        int[] color=new int[graph.length];
+        Arrays.fill(color,-1);
+        int k=0;
+        for(int[] arr:graph){
+         for(int j:arr){
+            graphh.get(k).add(j);
+         }
+         k++;
+        }
+        for(int i=0;i<graph.length;i++){
+            if(color[i]==-1){
+                if(dfs(i,0,color,graphh)==false){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean dfs(int curr,int c,int[] color,ArrayList<ArrayList<Integer>> graphh){
+        color[curr]=c;
+        for(int i=0;i<graphh.get(curr).size();i++){
+            int dest=graphh.get(curr).get(i);
+            if(color[dest]==-1){
+                 if(dfs(dest,1-c,color,graphh)==false){
+                 return false;
+                }
+            }
+            else if(color[dest]==c){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+class Solutioooon {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Queue<Pair> q=new LinkedList<>();
+        q.add(new Pair(beginWord,1));
+        HashSet<String> wordList1=new HashSet<>(wordList);
+        return bfs(q,wordList1,endWord);
+    }
+    public class Pair{
+        String s;
+        int time;
+        Pair(String s,int time){
+            this.s=s;
+            this.time=time;
+        }
+    }
+    public void process(String beginWord,HashSet<String> wordList1,int time, Queue<Pair> q){
+    char c[]=beginWord.toCharArray();
+    for(int i=0;i<c.length;i++){
+        char old=c[i];
+        for(char ch='a';ch<='z';ch++){
+            if(ch == old) continue;
+            c[i]=ch;
+            String s=new String(c);
+            if(wordList1.contains(s)){
+                q.add(new Pair(s,time+1));
+                wordList1.remove(s);
+            }
+        }
+        c[i]=old;
+    }
+    }
+    public int bfs(Queue<Pair> q,HashSet<String> l,String endWord){
+        while(!q.isEmpty()){
+            Pair p=q.poll();
+            String s=p.s;
+             if(s.equals(endWord)){
+             return p.time;
+             }
+            process(s,l,p.time,q);
+        }
+        return 0;
+    }
+}
+class Solutin {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        ArrayList<ArrayList<Integer>> gra=new ArrayList<>();
+        int n=graph.length;
+        for(int i=0;i<n;i++){
+            gra.add(new ArrayList<>());
+        }
+         for(int i = 0; i < n; i++){
+            for(int j : graph[i]){
+                gra.get(i).add(j);
+            }
+        }
+       List<Integer> res=new ArrayList<>();
+       int vis[]=new int[n];
+       int pathVis[]=new int[n];
+       int check[]=new int[n];
+       for(int i=0;i<n;i++){
+        if(vis[i]==0){
+            isDFS(gra,vis,pathVis,check,i);
+        }
+       }
+        for(int i=0;i<n;i++){
+            if(check[i]==1){
+                res.add(i);
+            }
+        }
+        
+       return res;
+    }
+    public boolean isDFS(ArrayList<ArrayList<Integer>> gra,int vis[],int pathVis[],int check[],int curr){
+        vis[curr]=1;
+        pathVis[curr]=1;
+        for(int i=0;i<gra.get(curr).size();i++){
+            int dest=gra.get(curr).get(i);
+            if(vis[dest]==0){
+                if(isDFS(gra,vis,pathVis,check,dest)){
+                    return true;
+                }
+            }
+            else if(pathVis[dest]==1){
+               return true;
+            }
+        }
+        check[curr]=1;
+        pathVis[curr]=0;
+        return false;
+    }
+}
